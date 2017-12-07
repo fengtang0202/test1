@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750, target-densitydpi=device-dpi, user-scalable=no">
+    <title>爱玛麦SMART</title>
+    <script src="js/jquery-1.8.3.min.js" ></script>
+    <style>
+        @keyframes slidetotop { 100% { top:-100%; opacity:0; } }
+        @-webkit-keyframes slidetotop { 100% { top:-100%; opacity:0; } }
+        @keyframes slidetoorigin { 100% { top:0; opacity:1; } }
+        @-webkit-keyframes slidetoorigin { 100% { top:0; opacity:1; } }
+        @keyframes fadein { 0% {opacity:0;} 100% {opacity:1;} }
+        @-webkit-keyframes fadein { 0% {opacity:0;} 100% {opacity:1;} }
+        @keyframes transy { 0% { transform:translateY(0%); }  50% { transform:translateY(-40%); }  100% { transform:translateY(0%); } }
+        @-webkit-keyframes transy { 0% { -webkit-transform:translateY(0%); }  50% { -webkit-transform:translateY(-40%); }  100% { -webkit-transform:translateY(0%); } }
+        @keyframes updown { 50% {transform:translateX(-50%) translateY(4%);} }
+        @-webkit-keyframes updown { 50% {-webkit-transform:translateX(-50%) translateY(4%);} }
+        @keyframes updown_weak { 50% {transform:translateX(-50%) translateY(2%);} }
+        @-webkit-keyframes updown_weak { 50% {-webkit-transform:translateX(-50%) translateY(2%);} }
+        @keyframes flag { 50% {transform:translateX(-50%) rotateZ(8deg);} }
+        @-webkit-keyframes flag { 50% {-webkit-transform:translateX(-50%) rotateZ(8deg);} }
+        @keyframes pulse {
+            0% { -webkit-transform: scale3d(1,1,1); transform: scale3d(1,1,1); }
+            50% { -webkit-transform: scale3d(1.3,1.3,1.3); transform: scale3d(1.3,1.3,1.3); }
+            100% { -webkit-transform: scale3d(1,1,1); transform: scale3d(1,1,1); }
+        }
+        @keyframes fadein { 0% {opacity:0;} 100% {opacity:1;} }
+
+        body { margin:0; padding:0; background:#f9e7ff; overflow:hidden; font-family:"Microsoft YaHei"; -webkit-user-drag:none; -webkit-tap-highlight-color:rgba(0, 0, 0, 0); }
+
+        .firstpage { display:flex; flex-direction:column; align-items:center; position:absolute; width:750px; height:100%; background:#f9e7ff; overflow:hidden; z-index:4; }
+        .firstpage>.theme_wrap { flex-basis:0; flex-grow:364; display:flex; align-items:center; justify-content:center; position:relative; width:100%; margin-top:26px; }
+        .firstpage>.theme_wrap>img { position:absolute; left:50%; transform:translateX(-50%); -webkit-transform:translateX(-50%); max-width:100%; max-height:100%; pointer-events:none; }
+        .firstpage>.theme_wrap>.qipao { transform:translateX(-50%) translateY(-2%); -webkit-transform:translateX(-50%) translateY(-2%);
+            animation:updown_weak 4s infinite ease-in-out; -webkit-animation:updown_weak 4s infinite ease-in-out; }
+        .firstpage>.theme_wrap>.flag { transform:translateX(-50%) rotateZ(-10deg); -webkit-transform:translateX(-50%) rotateZ(-10deg);
+            transform-origin:45% 70%; animation:flag 2s infinite ease-in-out; -webkit-animation:flag 2s infinite ease-in-out; }
+        .firstpage>.theme_wrap>.year { transform:translateX(-50%) translateY(-4%); -webkit-transform:translateX(-50%) translateY(-4%);
+            animation:updown 2s infinite ease-in-out; -webkit-animation:updown 2s infinite ease-in-out; }
+        .firstpage>.theme_wrap>.mouth { transform:translateX(-50%) translateY(-4%); -webkit-transform:translateX(-50%) translateY(-4%);
+            animation:updown 2s 1s infinite ease-in-out; -webkit-animation:updown 2s 1s infinite ease-in-out; }
+        .firstpage>.bike_wrap { flex-basis:0; flex-grow:587; display:flex; align-items:center; justify-content:center; position:relative; width:100%;  margin:14px 0 52px; }
+        .firstpage>.bike_wrap>.bike { max-width:100%; max-height:100%; pointer-events:none; }
+        .firstpage>.bottom { position:absolute; bottom:0; left:0; width:100%; height:62px; background:url("images/firstpage_bottom.png") no-repeat; background-size:100%; }
+
+        .secondpage { display:flex; flex-direction:column; align-items:center; position:absolute; width:750px; height:100%;
+            background:url(images/secondpage_bottom.png) bottom no-repeat #f9e7ff; background-size:100%; overflow:hidden; z-index:3; }
+        .secondpage>.bike_wrap { flex-basis:0; flex-grow:492; display:flex; align-items:center; justify-content:center; position:relative; width:100%; margin:8px 0 540px; }
+        .secondpage>.bike_wrap>.bike { position:absolute; left:50%; transform:translateX(-50%); -webkit-transform:translateX(-50%); width:100%; height:100%; max-height:580px; background:url("images/secondpage_bike_1.jpg") center no-repeat; background-size:auto 100%;
+            transition:background .3s; -webkit-transition:background .3s; }
+        .secondpage>.bike_wrap>.qipao { position:absolute; left:50%; width:100%; pointer-events:none;
+            transform:translateX(-50%) translateY(-2%); -webkit-transform:translateX(-50%) translateY(-2%); animation:updown_weak 4s infinite ease-in-out; -webkit-animation:updown_weak 4s infinite ease-in-out; }
+        .secondpage>.color_touch_top { position:absolute; bottom:490px; left:50%; transform:translateX(-50%); -webkit-transform:translateX(-50%); width:350px; height:56px; }
+        .secondpage>.parameter_button { position:absolute; bottom:417px; left:50%; transform:translateX(-50%); -webkit-transform:translateX(-50%); width:320px; height:60px; }
+        .secondpage>.color_touch_bottom { position:absolute; bottom:150px; left:50%; transform:translateX(-50%); -webkit-transform:translateX(-50%); width:700px; height:190px; }
+
+        .thirdpage { display:flex; flex-direction:column; align-items:center; position:absolute; width:750px; height:100%; background:#f9e7ff; overflow:hidden; z-index:2; }
+        .thirdpage>.logo_wrap { position:absolute; top:0; left:0; height:133px; background:url(images/thirdpage_top_bg.jpg) no-repeat; }
+        .thirdpage>.bike_wrap { flex-basis:0; flex-grow:983; display:flex; align-items:center; justify-content:center; position:relative; width:100%; margin:159px 0 62px; }
+        .thirdpage>.bike_wrap>.bike { max-width:100%; max-height:100%; pointer-events:none; }
+        .thirdpage>.bike_wrap>.point_wrap { position:absolute; display:none; animation:.5s fadein forwards; -webkit-animation:.5s fadein forwards; }
+        .thirdpage>.bike_wrap>.point_wrap>.point { position:absolute; width:34px; height:34px; padding:20px; }
+        .thirdpage>.bike_wrap>.point_wrap>.point.point_1 { top:15.4%; left:23.5%; }
+        .thirdpage>.bike_wrap>.point_wrap>.point.point_2 { top:37.6%; left:44.6%; }
+        .thirdpage>.bike_wrap>.point_wrap>.point:before { content:""; display:block; width:34px; height:34px; border-radius:17px; background:rgba(30, 211, 223, .4);
+            animation:2s pulse infinite; -webkit-animation:2s pulse infinite; }
+        .thirdpage>.bike_wrap>.point_wrap>.point:after { content:""; position:absolute; top:27px; left:27px; width:20px; height:20px; border-radius:10px; background:rgba(30, 211, 223, 1); }
+        .thirdpage>.bike_wrap>.qipao { position:absolute; left:50%; width:100%; pointer-events:none;
+            transform:translateX(-50%) translateY(-2%); -webkit-transform:translateX(-50%) translateY(-2%); animation:updown_weak 4s infinite ease-in-out; -webkit-animation:updown_weak 4s infinite ease-in-out; }
+        .thirdpage>.bottom { position:absolute; bottom:0; left:0; width:100%; height:62px; background:url("images/firstpage_bottom.png") no-repeat; background-size:100%;  }
+
+        .forthpage { display:flex; flex-direction:column; align-items:center; position:absolute; width:750px; height:100%; background:#f9e7ff; overflow:hidden; z-index:1; }
+        .forthpage>.logo_wrap { position:absolute; top:0; left:0; height:133px; background:url(images/thirdpage_top_bg.jpg) no-repeat; }
+        .forthpage>.bike_wrap { flex-basis:0; flex-grow:984; display:flex; align-items:center; justify-content:center; position:relative; width:100%; margin:159px 0 62px; }
+        .forthpage>.bike_wrap>.bike { max-width:100%; max-height:100%; pointer-events:none; }
+        .forthpage>.bike_wrap>.point_wrap { position:absolute; display:none; animation:.5s fadein forwards; -webkit-animation:.5s fadein forwards; }
+        .forthpage>.bike_wrap>.point_wrap>.point { position:absolute; width:34px; height:34px; padding:20px; }
+        .forthpage>.bike_wrap>.point_wrap>.point.point_1 { top:22.4%; left:32%; }
+        .forthpage>.bike_wrap>.point_wrap>.point.point_2 { top:24.4%; left:41.3%; }
+        .forthpage>.bike_wrap>.point_wrap>.point.point_3 { top:35.3%; left:32.6%; }
+        .forthpage>.bike_wrap>.point_wrap>.point.point_4 { top:41.2%; left:42.4%; }
+        .forthpage>.bike_wrap>.point_wrap>.point.point_5 { top:54.5%; left:32.3%; }
+        .forthpage>.bike_wrap>.point_wrap>.point.point_6 { top:58.9%; left:81.6%; }
+        .forthpage>.bike_wrap>.point_wrap>.point:before { content:""; display:block; width:34px; height:34px; border-radius:17px; background:rgba(30, 211, 223, .4);
+            animation:2s pulse infinite; -webkit-animation:2s pulse infinite; }
+        .forthpage>.bike_wrap>.point_wrap>.point:after { content:""; position:absolute; top:27px; left:27px; width:20px; height:20px; border-radius:10px; background:rgba(30, 211, 223, 1); }
+        .forthpage>.bike_wrap>.qipao { position:absolute; left:50%; width:100%; pointer-events:none;
+            transform:translateX(-50%) translateY(-2%); -webkit-transform:translateX(-50%) translateY(-2%); animation:updown_weak 4s infinite ease-in-out; -webkit-animation:updown_weak 4s infinite ease-in-out; }
+        .forthpage>.bottom { position:absolute; bottom:0; left:0; width:100%; height:62px; background:url("images/firstpage_bottom.png") no-repeat; background-size:100%;  }
+
+
+        .logo_wrap { flex-basis:0; flex-grow:133; display:flex; align-items:center; justify-content:center; position:relative; width:100%; padding-top:26px; }
+        .logo_wrap>.logo { max-width:100%; max-height:100%; pointer-events:none; }
+        .slide { position:absolute; bottom:15px; width:100%; transform:scale(1.3, 1); -webkit-transform:scale(1.3, 1); animation:fadein .5s 1s both; -webkit-animation:fadein .5s 1s both; }
+        .slide>.arrow1 { width:28px; height:14px; margin:0 auto -4px; overflow:hidden; animation:transy 1s infinite ease-in-out; -webkit-animation:transy 1s infinite ease-in-out; }
+        .slide>.arrow1:before {content:""; display: block; width:20px; height:20px; margin-left:3px; margin-top:4px; border:#250332 1px solid; transform:rotate(45deg); -webkit-transform:rotate(45deg); }
+        .slide>.arrow2 { width:28px; height:14px; margin:0 auto 2px; overflow:hidden; animation:transy 1s infinite ease-in-out; -webkit-animation:transy 1s infinite ease-in-out; }
+        .slide>.arrow2:before {content:""; display: block; width:20px; height:20px; margin-left:3px; margin-top:4px; border:#250332 1px solid; transform:rotate(45deg); -webkit-transform:rotate(45deg); }
+
+        .dialog_wrap { display:flex; align-items:center; justify-content:center; position:absolute; top:0; left:0; width:100%; height:100%; perspective:1300px; -webkit-perspective:1300px; pointer-events:none; }
+        .dialog_wrap>.dialog_under { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:auto; display:none; }
+        .dialog_wrap>.dialog { position:absolute; -webkit-transform-style:preserve-3d; transform-style:preserve-3d; pointer-events:auto; }
+
+        .secondpage .dialog_wrap .dialog.parameter { left:50%; bottom:94px; box-sizing:border-box; border:1px #ced1d8 solid;
+            -webkit-transform:translateX(-50%) translateY(100%) rotateX(90deg); transform:translateX(-50%) translateY(100%) rotateX(90deg); -webkit-transform-origin:0 50%; transform-origin:0 50%; opacity:0;
+            -webkit-transition:all 0.4s ease-in-out; transition:all 0.4s ease-in-out; }
+        .secondpage .dialog_wrap .dialog.parameter.show { -webkit-transform:translateX(-50%) translateY(0%) rotateX(0deg); transform:translateX(-50%) translateY(0%) rotateX(0deg); opacity:1; }
+        .secondpage .dialog_wrap .dialog.parameter img { width:688px; pointer-events:none; }
+
+        .dialog_wrap>.dialog.tag { left:50%; top:50%;
+            -webkit-transform:translateZ(100px) translateX(60%) translateY(-50%) rotateY(-90deg); transform:translateZ(100px) translateX(60%) translateY(-50%) rotateY(-90deg);
+            -webkit-transform-origin:0 100%;  transform-origin:0 100%; opacity:0; -webkit-transition:all 0.4s ease-in-out; transition:all 0.4s ease-in-out; }
+        .dialog_wrap>.dialog.tag.show {
+            -webkit-transform:translateZ(0) translateX(-50%) translateY(-50%) rotateY(0deg); transform:translateZ(0) translateX(-50%) translateY(-50%) rotateY(0deg); opacity:1;
+        }
+    </style>
+</head>
+<body>
+    <section class="firstpage">
+        <div class="logo_wrap">
+            <img class="logo" src="images/logo.png" />
+        </div>
+        <div class="theme_wrap">
+            <img class="qipao" src="images/firstpage_qipao.png"/>
+            <img class="flag" src="images/firstpage_flag.png"/>
+            <img class="theme" src="images/firstpage_theme.png"/>
+            <img class="year" src="images/firstpage_year.png"/>
+            <img class="mouth" src="images/firstpage_mouth.png"/>
+        </div>
+        <div class="bike_wrap">
+            <img class="bike" src="images/firstpage_bike.jpg"/>
+        </div>
+        <div class="bottom">
+            <div class="slide"><div class="arrow1"></div><div class="arrow2"></div></div>
+        </div>
+    </section>
+    <section class="secondpage">
+        <div class="logo_wrap">
+            <img class="logo" src="images/logo.png" />
+        </div>
+        <div class="bike_wrap">
+            <div class="bike"></div>
+            <img class="qipao" src="images/secondpage_qipao.png" />
+        </div>
+        <div class="color_touch_top"></div>
+        <div class="parameter_button"></div>
+        <div class="color_touch_bottom"></div>
+        <div class="dialog_wrap">
+            <div class="dialog parameter"><img src="images/secondpage_parameter.png" /></div>
+        </div>
+        <div class="slide"><div class="arrow1"></div><div class="arrow2"></div></div>
+    </section>
+    <section class="thirdpage">
+        <div class="logo_wrap">
+            <img class="logo" src="images/logo.png" />
+        </div>
+        <div class="bike_wrap">
+            <img class="bike" src="images/thirdpage_center_bg.jpg"/>
+            <div class="point_wrap">
+                <div class="point point_1"></div>
+                <div class="point point_2"></div>
+            </div>
+            <img class="qipao" src="images/thirdpage_qipao.png" />
+        </div>
+        <div class="bottom">
+            <div class="slide"><div class="arrow1"></div><div class="arrow2"></div></div>
+        </div>
+        <div class="dialog_wrap">
+            <div class="dialog tag tag1">
+                <img class="bg" src="images/thirdpage_dialog_1.jpg">
+            </div>
+            <div class="dialog tag tag2">
+                <img class="bg" src="images/thirdpage_dialog_2.jpg">
+            </div>
+            <div class="dialog_under"></div>
+        </div>
+    </section>
+    <section class="forthpage">
+        <div class="logo_wrap">
+            <img class="logo" src="images/logo.png" />
+        </div>
+        <div class="bike_wrap">
+            <img class="bike" src="images/forthpage_center_bg.jpg"/>
+            <div class="point_wrap">
+                <div class="point point_1"></div>
+                <div class="point point_2"></div>
+                <div class="point point_3"></div>
+                <div class="point point_4"></div>
+                <div class="point point_5"></div>
+                <div class="point point_6"></div>
+            </div>
+            <img class="qipao" src="images/forthpage_qipao.png" />
+        </div>
+        <div class="bottom"></div>
+        <div class="dialog_wrap">
+            <div class="dialog tag tag1">
+                <img class="bg" src="images/forthpage_dialog_1.jpg">
+            </div>
+            <div class="dialog tag tag2">
+                <img class="bg" src="images/forthpage_dialog_2.jpg">
+            </div>
+            <div class="dialog tag tag3">
+                <img class="bg" src="images/forthpage_dialog_3.jpg">
+            </div>
+            <div class="dialog tag tag4">
+                <img class="bg" src="images/forthpage_dialog_4.jpg">
+            </div>
+            <div class="dialog tag tag5">
+                <img class="bg" src="images/forthpage_dialog_5.jpg">
+            </div>
+            <div class="dialog tag tag6">
+                <img class="bg" src="images/forthpage_dialog_6.jpg">
+            </div>
+            <div class="dialog_under"></div>
+        </div>
+    </section>
+
+</body>
+<script>
+    $(document).on("touchmove",function(e){
+        e.preventDefault();
+    }, false);
+
+    initImgAnim($(".firstpage>.theme_wrap>.flag"), "flag");
+    initImgAnim($(".firstpage>.theme_wrap>.year"), "year");
+    initImgAnim($(".firstpage>.theme_wrap>.mouth"), "mouth");
+    initImgAnim($(".firstpage>.theme_wrap>.qipao"), "qipao");
+    initImgAnim($(".secondpage>.bike_wrap>.qipao"), "qipao");
+    initImgAnim($(".thirdpage>.bike_wrap>.qipao"), "qipao");
+    initImgAnim($(".forthpage>.bike_wrap>.qipao"), "qipao");
+  //img出动画
+    function initImgAnim($div, className) {
+        $div[0].onload = function(){
+            $div.removeClass(className);
+            setTimeout(function(){
+                $div.addClass(className);
+            }, 100);
+        }
+    }
+
+    $(function(){
+        $(".secondpage>.parameter_button").click(function(){
+            toggleDialog($(".secondpage>.dialog_wrap>.dialog.parameter"));
+        });
+        var $secondpage_bike = $(".secondpage>.bike_wrap>.bike");
+        var bikeCurrentNum = 1;
+        $(".secondpage>.color_touch_top, .secondpage>.color_touch_bottom").on("touchstart touchmove", function(e) {
+            var deltaX = e.originalEvent.targetTouches[0].pageX - $(this).offset().left;
+            if (deltaX < $(this).width()/3) {
+                bikeCurrentNum = 1;
+                $secondpage_bike.css("background-image", "url('images/secondpage_bike_1.jpg')");
+            } else if (deltaX < $(this).width()*2/3) {
+                bikeCurrentNum = 2;
+                $secondpage_bike.css("background-image", "url('images/secondpage_bike_2.jpg')");
+            } else{
+                bikeCurrentNum = 3;
+                $secondpage_bike.css("background-image", "url('images/secondpage_bike_3.jpg')");
+            }
+        });
+        setInterval(function() {
+            bikeCurrentNum = bikeCurrentNum%3+1;
+            $secondpage_bike.css("background-image", "url('images/secondpage_bike_"+bikeCurrentNum+".jpg')");
+        }, 3000);
+
+        $(".thirdpage>.bike_wrap>.point_wrap>.point.point_1").click(function(){
+            $(".thirdpage>.dialog_wrap>.dialog_under").show();
+            $(".thirdpage>.dialog_wrap>.dialog.tag1").addClass("show");
+        });
+        $(".thirdpage>.bike_wrap>.point_wrap>.point.point_2").click(function(){
+            $(".thirdpage>.dialog_wrap>.dialog_under").show();
+            $(".thirdpage>.dialog_wrap>.dialog.tag2").addClass("show");
+        });
+        $(".thirdpage>.dialog_wrap>.dialog_under").click(function(){
+            $(".thirdpage>.dialog_wrap>.dialog").removeClass("show");
+            $(this).hide();
+        });
+
+        $(".forthpage>.bike_wrap>.point_wrap>.point.point_1").click(function(){
+            $(".forthpage>.dialog_wrap>.dialog_under").show();
+            $(".forthpage>.dialog_wrap>.dialog.tag1").addClass("show");
+        });
+        $(".forthpage>.bike_wrap>.point_wrap>.point.point_2").click(function(){
+            $(".forthpage>.dialog_wrap>.dialog_under").show();
+            $(".forthpage>.dialog_wrap>.dialog.tag2").addClass("show");
+        });
+        $(".forthpage>.bike_wrap>.point_wrap>.point.point_3").click(function(){
+            $(".forthpage>.dialog_wrap>.dialog_under").show();
+            $(".forthpage>.dialog_wrap>.dialog.tag3").addClass("show");
+        });
+        $(".forthpage>.bike_wrap>.point_wrap>.point.point_4").click(function(){
+            $(".forthpage>.dialog_wrap>.dialog_under").show();
+            $(".forthpage>.dialog_wrap>.dialog.tag4").addClass("show");
+        });
+        $(".forthpage>.bike_wrap>.point_wrap>.point.point_5").click(function(){
+            $(".forthpage>.dialog_wrap>.dialog_under").show();
+            $(".forthpage>.dialog_wrap>.dialog.tag5").addClass("show");
+        });
+        $(".forthpage>.bike_wrap>.point_wrap>.point.point_6").click(function(){
+            $(".forthpage>.dialog_wrap>.dialog_under").show();
+            $(".forthpage>.dialog_wrap>.dialog.tag6").addClass("show");
+        });
+        $(".forthpage>.dialog_wrap>.dialog_under").click(function(){
+            $(".forthpage>.dialog_wrap>.dialog").removeClass("show");
+            $(this).hide();
+        });
+    });
+
+    function toggleDialog($dialog) {
+        if ($dialog.hasClass("show")) {
+            $dialog.removeClass("show");
+        } else {
+            $dialog.addClass("show");
+        }
+    }
+
+
+    for (var i=1; i<=3; i++) {
+        preLoadBackground("images/secondpage_bike_"+i+".jpg");
+    }
+
+    function preLoadImg(url) {
+        var img = new Image();
+        img.src = url;
+    }
+    function preLoadBackground(url) {
+        var newDiv = $("<div><div/>").css("background-image", "url('"+url+"')").appendTo("body");
+        setTimeout(function(){
+            newDiv.remove();
+        }, 10);
+    }
+
+
+    registerSlide(null, null, $(".firstpage"), $(".secondpage"), null);
+    registerSlide(null, $(".firstpage"), $(".secondpage"), $(".thirdpage"), function() {
+        var $bike = $(".thirdpage>.bike_wrap>.bike")[0];
+        var $point_wrap = $(".thirdpage>.bike_wrap>.point_wrap");
+        $point_wrap.css("top", $bike.offsetTop);
+        $point_wrap.css("left", $bike.offsetLeft);
+        $point_wrap.css("width", $bike.width);
+        $point_wrap.css("height", $bike.height);
+        $point_wrap.show();
+    });
+    registerSlide(null, $(".secondpage"), $(".thirdpage"), $(".forthpage"), function() {
+        var $bike = $(".forthpage>.bike_wrap>.bike")[0];
+        var $point_wrap = $(".forthpage>.bike_wrap>.point_wrap");
+        $point_wrap.css("top", $bike.offsetTop);
+        $point_wrap.css("left", $bike.offsetLeft);
+        $point_wrap.css("width", $bike.width);
+        $point_wrap.css("height", $bike.height);
+        $point_wrap.show();
+    });
+    registerSlide(null, $(".thirdpage"), $(".forthpage"), null, null);
+
+    function registerSlide(page0Do, page0, page1, page2, page2Do) {
+        //上滑事件
+        var start_y;
+        page1.on("touchstart",function(e) {
+            if (page1.attr("touchable") == "false") {
+                start_y = Infinity;
+                return;
+            }
+            start_y = e.originalEvent.targetTouches[0].pageY;
+            var page1_index = parseInt(page1.css("z-index"));
+            if (page1_index <= 0) {
+                page1_index = 999;
+                page1.css("z-index", page1_index);
+            }
+            if (page0 != null) {
+                page0.attr("touchable", "false");
+                page0.css("animation", "1");
+                page0.css("-webkit-animation", "1");
+                page0.css("top", "-100%");
+                page0.css("opacity", "0");
+                page0.css("z-index", page1_index+1);
+                page0.css("visibility", "visible");
+                page0.show();
+            }
+            if (page2 != null) {
+                page2.attr("touchable", "false");
+                page2.css("animation", "1");
+                page2.css("-webkit-animation", "1");
+                page2.css("top", "0");
+                page2.css("opacity", "1");
+                page2.css("z-index", page1_index-1);
+                page2.css("visibility", "visible");
+                page2.show();
+            }
+        });
+        var page_height = parseInt(page1.css("height"));
+        page1.on("touchmove",function(e) {
+            if (page1.attr("touchable") == "false" || start_y == Infinity)
+                return;
+            var delta_y = e.originalEvent.targetTouches[0].pageY - start_y;
+            if (delta_y <= 0) {
+                if (page2 != null) {
+                    page1.css("animation", "1");
+                    page1.css("-webkit-animation", "1");
+                    page1.css("top", "-"+(-delta_y)+"px");
+                    page1.css("opacity", 1 + (delta_y/page_height));
+                }
+            } else {
+                if (page0 != null) {
+                    page0.css("animation", "1");
+                    page0.css("-webkit-animation", "1");
+                    page0.css("top", -(1-delta_y/page_height)*100+"%");
+                    page0.css("opacity", delta_y/page_height);
+                }
+            }
+        });
+        page1.on("touchend",function(e) {
+            if (page1.attr("touchable") == "false" || start_y == Infinity)
+                return;
+            var delta_y = e.originalEvent.changedTouches[0].pageY - start_y;
+            if (delta_y < -80) {
+                if (page2 != null) {
+                    if (page0 != null)
+                        page0.css("visibility", "hidden");
+                    page1.css("animation", "slidetotop .4s forwards ease-out");
+                    page1.css("-webkit-animation", "slidetotop .4s forwards ease-out");
+                    page1.attr("touchable", "false");
+                    setTimeout(function(){page2.attr("touchable", "true");}, 200);
+                    if (page2.attr("alreadyDo") != "true") {
+                        page2.attr("alreadyDo", "true");
+                        setTimeout(function(){
+                            if (page2Do != null) {
+                                page2Do();
+                            }
+                        }, 400);
+                    }
+                }
+            } else if (delta_y > 80) {
+                if (page0 != null) {
+                    if (page2 != null)
+                        page2.css("visibility", "hidden");
+                    page0.css("animation", "slidetoorigin .4s forwards ease-out");
+                    page0.css("-webkit-animation", "slidetoorigin .4s forwards ease-out");
+                    page1.attr("touchable", "false");
+                    setTimeout(function(){page0.attr("touchable", "true");}, 300);
+                    if (page0.attr("alreadyDo") != "true") {
+                        page0.attr("alreadyDo", "true");
+                        setTimeout(function(){
+                            if (page0Do != null) {
+                                page0Do();
+                            }
+                        }, 400);
+                    }
+                }
+            } else {
+                if (page2 != null) {
+                    page1.css("animation", "slidetoorigin .1s forwards ease-out");
+                    page1.css("-webkit-animation", "slidetoorigin .1s forwards ease-out");
+                }
+                if (page0 != null) {
+                    page0.css("animation", "slidetotop .1s forwards ease-out");
+                    page0.css("-webkit-animation", "slidetotop .1s forwards ease-out");
+                }
+            }
+        });
+    }
+</script>
+</html>
